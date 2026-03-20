@@ -26,10 +26,17 @@ export const syncOfflineData = async () => {
         await api.put(`/minutes/${payload.id}`, payload)
       }
 
+<<<<<<< HEAD
       await markAsSynced(item.id)
       syncedCount++
     } catch (err) {
       console.error(`Failed to sync item ${item.id}:`, err)
+=======
+      await markAsSynced(item.ID)
+      syncedCount++
+    } catch (err) {
+      console.error(`Failed to sync item ${item.ID}:`, err)
+>>>>>>> master
       // Don't mark as synced — will retry next time
     }
   }

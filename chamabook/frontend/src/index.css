@@ -33,3 +33,47 @@ input, select, textarea {
   font-family: inherit;
   font-size: 14px;
 }
+<<<<<<< HEAD
+=======
+
+/* ── Mobile responsive utilities ── */
+@media (max-width: 640px) {
+  /* Stack 2-col grids to 1 col */
+  .grid-2 { grid-template-columns: 1fr !important; }
+
+  /* Member statement side-by-side → stacked */
+  .statement-layout {
+    grid-template-columns: 1fr !important;
+    height: auto !important;
+  }
+
+  /* Modals full screen on mobile */
+  .modal-card {
+    margin: 0 !important;
+    border-radius: 16px 16px 0 0 !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    max-width: 100% !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+  }
+
+  /* Buttons full width on small screens */
+  .btn-row { flex-direction: column !important; }
+  .btn-row button { width: 100% !important; }
+
+  /* Reduce padding on mobile */
+  .card-pad { padding: 16px !important; }
+}
+
+/* Smooth scrolling everywhere */
+* { -webkit-overflow-scrolling: touch; }
+
+/* Better tap targets on mobile */
+button, a { min-height: 40px; }
+
+/* Prevent zoom on input focus (iOS) */
+input, select, textarea { font-size: 16px !important; }
+>>>>>>> master
