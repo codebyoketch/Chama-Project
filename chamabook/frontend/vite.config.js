@@ -9,11 +9,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       // Cache all app assets for offline use
       workbox: {
-<<<<<<< HEAD
-=======
     	skipWaiting: true,
     	clientsClaim: true,
->>>>>>> master
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
         runtimeCaching: [
           {

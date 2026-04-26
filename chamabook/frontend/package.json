@@ -9,36 +9,20 @@
     "preview": "vite preview"
   },
   "dependencies": {
-<<<<<<< HEAD
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.21.0",
-=======
     "axios": "^1.6.2",
     "date-fns": "^3.0.6",
->>>>>>> master
     "dexie": "^3.2.4",
     "dexie-react-hooks": "^1.1.7",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.8.1",
-<<<<<<< HEAD
-    "xlsx": "^0.18.5",
-    "axios": "^1.6.2",
-    "date-fns": "^3.0.6"
-=======
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.21.0",
     "xlsx": "^0.18.5"
->>>>>>> master
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.1",
     "vite": "^5.0.8",
-<<<<<<< HEAD
-    "vite-plugin-pwa": "^0.17.4"
-=======
     "vite-plugin-pwa": "^0.17.5"
->>>>>>> master
   }
 }
