@@ -244,7 +244,7 @@ Full-Stack & Backend Developer
 
 - Portfolio: https://oketchlabs.space
 - GitHub: https://github.com/codebyoketch
-- LinkedIn: https://ke.linkedin.com/in/dishon-oketch-742011256
+- LinkedIn: https://ke.linkedin.com/in/oketch
 
 ---
 
