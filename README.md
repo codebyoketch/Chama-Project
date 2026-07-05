@@ -1,148 +1,251 @@
 # 🌱 ChamaBook
 
-Digital savings management for SACCOs and chamas — replacing the physical book.
+> Modern savings and loan management for SACCOs and Chamas.
+>
+> Replace the physical ledger with a secure, offline-capable web application built for African community savings groups.
 
-## Tech Stack
-- **Backend**: Go + Gin + GORM + PostgreSQL
-- **Frontend**: React + Vite (PWA — works offline!)
-- **Offline**: Dexie.js (IndexedDB) + Service Worker
-- **Auth**: JWT
-
----
-
-## Project Structure
-
-```
-chamabook/
-├── backend/
-│   ├── main.go
-│   ├── go.mod
-│   ├── .env.example        ← copy to .env and fill in values
-│   ├── config/
-│   │   └── database.go     ← DB connection + connection pool
-│   ├── models/
-│   │   └── models.go       ← all database models
-│   ├── handlers/
-│   │   ├── auth.go         ← register, login
-│   │   ├── members.go      ← member CRUD
-│   │   ├── contributions.go
-│   │   ├── loans.go
-│   │   └── dashboard.go    ← stats + minutes
-│   ├── middleware/
-│   │   └── auth.go         ← JWT auth + role check
-│   └── routes/
-│       └── routes.go       ← all API routes
-└── frontend/
-    ├── package.json
-    ├── vite.config.js      ← PWA config
-    └── src/
-        ├── App.jsx
-        ├── context/
-        │   └── AuthContext.jsx   ← global auth state
-        ├── db/
-        │   └── localDB.js        ← Dexie offline database
-        ├── services/
-        │   ├── api.js            ← Axios with JWT
-        │   └── sync.js           ← offline → online sync
-        ├── hooks/
-        │   └── useOnlineStatus.js
-        ├── components/
-        │   └── Layout.jsx
-        └── pages/
-            ├── Dashboard.jsx
-            ├── Members.jsx
-            ├── Contributions.jsx  ← has offline support
-            ├── Loans.jsx
-            └── Minutes.jsx
-```
+![Go](https://img.shields.io/badge/Go-1.22-00ADD8?logo=go)
+![React](https://img.shields.io/badge/React-18-61DAFB?logo=react)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-316192?logo=postgresql)
+![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker)
+![License](https://img.shields.io/badge/License-MIT-green)
 
 ---
 
-## Getting Started
+## Overview
 
-### 1. Backend
+ChamaBook is a full-stack platform designed to help SACCOs and informal savings groups manage their day-to-day operations digitally.
+
+It supports member management, contributions, loans, meeting minutes, and reporting while remaining usable in environments with unreliable internet connectivity through offline-first technology.
+
+---
+
+## Features
+
+- 👥 Member management
+- 💰 Contributions tracking
+- 🏦 Loan issuance & repayments
+- 📝 Meeting minutes
+- 📊 Dashboard & analytics
+- 🔐 JWT Authentication
+- 🌐 Progressive Web App (PWA)
+- 📱 Offline support with automatic synchronization
+- 🚀 REST API
+- 🔄 Role-based access control
+
+---
+
+# Tech Stack
+
+| Layer | Technology |
+|--------|------------|
+| Backend | Go, Gin, GORM |
+| Frontend | React, Vite, Tailwind CSS |
+| Database | PostgreSQL |
+| Offline Storage | IndexedDB (Dexie.js) |
+| Authentication | JWT |
+| Deployment | Railway, Vercel |
+| DevOps | Docker |
+
+---
+
+# Architecture
+
+```
+                  React PWA
+                       │
+               Axios + JWT API
+                       │
+               Gin REST Backend
+                       │
+                     GORM
+                       │
+                 PostgreSQL
+```
+
+Offline mode
+
+```
+User
+ │
+ ▼
+IndexedDB (Dexie)
+ │
+ ▼
+Sync Queue
+ │
+ ▼
+Backend API
+```
+
+---
+
+# Project Structure
+
+```
+chamabook
+├── backend
+│   ├── config
+│   ├── handlers
+│   ├── middleware
+│   ├── models
+│   ├── routes
+│   └── main.go
+│
+└── frontend
+    ├── src
+    │   ├── components
+    │   ├── context
+    │   ├── db
+    │   ├── hooks
+    │   ├── pages
+    │   └── services
+    └── vite.config.js
+```
+
+---
+
+# Getting Started
+
+## Clone
+
+```bash
+git clone https://github.com/codebyoketch/Chama-Project.git
+
+cd Chama-Project
+```
+
+---
+
+## Backend
 
 ```bash
 cd backend
 
-# Copy env file and fill in your values
 cp .env.example .env
 
-# Install dependencies
 go mod tidy
 
-# Run (make sure PostgreSQL is running)
 go run main.go
 ```
 
-The API will start at `http://localhost:8080`
+Runs on
 
-### 2. Frontend
+```
+http://localhost:8080
+```
+
+---
+
+## Frontend
 
 ```bash
 cd frontend
 
-# Install dependencies
 npm install
 
-# Start dev server
 npm run dev
 ```
 
-The app will open at `http://localhost:5173`
+Runs on
+
+```
+http://localhost:5173
+```
 
 ---
 
-## API Endpoints
+# API
 
-| Method | Route | Description | Auth |
-|--------|-------|-------------|------|
-| POST | /api/v1/auth/register | Create group + admin | Public |
-| POST | /api/v1/auth/login | Login | Public |
-| GET | /api/v1/dashboard | Stats overview | Required |
-| GET | /api/v1/members | List members | Required |
-| POST | /api/v1/members | Add member | Admin |
-| GET | /api/v1/contributions | List contributions | Required |
-| POST | /api/v1/contributions | Record contribution | Admin |
-| POST | /api/v1/contributions/sync | Bulk offline sync | Admin |
-| GET | /api/v1/loans | List loans | Required |
-| POST | /api/v1/loans | Issue loan | Admin |
-| POST | /api/v1/loans/repayment | Record repayment | Admin |
-| GET | /api/v1/minutes | List minutes | Required |
-| POST | /api/v1/minutes | Add minutes | Required |
-
----
-
-## Offline Support
-
-How it works:
-1. App loads → caches all data in IndexedDB (Dexie)
-2. Internet drops → app shows offline banner
-3. Treasurer records contributions/loans → saved to IndexedDB + sync queue
-4. Internet returns → sync runs automatically, sends all queued records to backend
-5. Conflicts are avoided using `client_temp_id` to deduplicate
+| Method | Endpoint | Description |
+|---------|----------|-------------|
+| POST | /api/v1/auth/register | Register group |
+| POST | /api/v1/auth/login | Login |
+| GET | /api/v1/dashboard | Dashboard |
+| GET | /api/v1/members | Members |
+| POST | /api/v1/members | Create member |
+| GET | /api/v1/contributions | Contributions |
+| POST | /api/v1/contributions | Add contribution |
+| POST | /api/v1/contributions/sync | Offline sync |
+| GET | /api/v1/loans | Loans |
+| POST | /api/v1/loans | Create loan |
+| POST | /api/v1/loans/repayment | Loan repayment |
+| GET | /api/v1/minutes | Meeting minutes |
+| POST | /api/v1/minutes | Record minutes |
 
 ---
 
-## Deployment
+# Offline Support
 
-**Backend → Railway**
-1. Push to GitHub
-2. Connect repo to Railway
-3. Add environment variables from .env
-4. Deploy
+ChamaBook is designed to continue working without an internet connection.
 
-**Frontend → Vercel**
-1. Push frontend folder to GitHub
-2. Connect to Vercel
-3. Set `VITE_API_URL` if needed
-4. Deploy
+Workflow:
+
+```
+Internet Available
+        │
+        ▼
+Download latest data
+        │
+        ▼
+Store locally (IndexedDB)
+        │
+Internet Lost
+        │
+        ▼
+Continue working normally
+        │
+Queue all changes
+        │
+Internet Restored
+        │
+        ▼
+Automatic synchronization
+```
+
+Duplicate submissions are prevented using a unique `client_temp_id`.
 
 ---
 
-## Phase 2 (after submission)
-- [ ] M-Pesa Daraja API integration
-- [ ] SMS notifications (Africa's Talking)
-- [ ] PDF report generation
-- [ ] Freemium billing system
-- [ ] Multi-group support
+# Deployment
+
+## Backend
+
+- Railway
+- Docker supported
+
+## Frontend
+
+- Vercel
+- Any static hosting provider
+
+---
+
+# Roadmap
+
+## Upcoming
+
+- [ ] M-Pesa Daraja Integration
+- [ ] Africa's Talking SMS Notifications
+- [ ] PDF Reports
+- [ ] Email Notifications
+- [ ] Multi-group Support
+- [ ] Audit Logs
+- [ ] Docker Compose Production Deployment
+- [ ] CI/CD with GitHub Actions
+
+---
+
+# Author
+
+**Dishon Oketch**
+
+Full-Stack & Backend Developer
+
+- Portfolio: https://oketchlabs.space
+- GitHub: https://github.com/codebyoketch
+- LinkedIn: https://ke.linkedin.com/in/dishon-oketch-742011256
+
+---
+
+> *Building practical software for real communities.*
